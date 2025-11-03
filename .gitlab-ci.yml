@@ -42,11 +42,13 @@ package_job:
 
 deploy_test_job:
   stage: deploy_test
-  image: nicopaez/kubectl:1.28.0
+  image: nicopaez/kubectl:1.32.5
   environment: test
   script:
     - VERSION=$(cat VERSION.txt)
     - cp ${KUBECONFIG} $HOME/.kube/config
+    - cp ${SECRETS} infra/${CI_ENVIRONMENT_NAME}.secrets.yaml
+    - kubectl -n ${TEAM}-${CI_ENVIRONMENT_NAME} apply -f infra/${CI_ENVIRONMENT_NAME}.secrets.yaml
     - kubectl -n ${TEAM}-${CI_ENVIRONMENT_NAME} apply -f infra/${CI_ENVIRONMENT_NAME}.configmap.yaml
     - kubectl -n ${TEAM}-${CI_ENVIRONMENT_NAME} set image deployment/telegrambot telegrambot=$CI_REGISTRY_IMAGE:$VERSION
   only:
