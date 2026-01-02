@@ -5,6 +5,7 @@ gem 'faraday'
 gem 'rake'
 gem 'semantic_logger'
 gem 'telegram-bot-ruby'
+gem 'webrick'
 
 group :development, :test do
   gem 'debug'
@@ -16,7 +17,6 @@ group :development, :test do
   gem 'simplecov'
   gem 'vcr'
   gem 'webmock'
-  gem 'webrick'
 end
 
 group :development do
