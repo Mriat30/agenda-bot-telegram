@@ -120,28 +120,6 @@ describe 'BotClient' do
     app.run_once
   end
 
-  it 'should get a /tv message and respond with an inline keyboard' do
-    token = 'fake_token'
-
-    when_i_send_text(token, '/tv')
-    then_i_get_keyboard_message(token, 'Quien se queda con el trono?')
-
-    app = BotClient.new(token)
-
-    app.run_once
-  end
-
-  it 'should get a "Quien se queda con el trono?" message and respond with' do
-    token = 'fake_token'
-
-    when_i_send_keyboard_updates(token, 'Quien se queda con el trono?', '2')
-    then_i_get_text(token, 'A mi también me encantan los dragones!')
-
-    app = BotClient.new(token)
-
-    app.run_once
-  end
-
   it 'should get an unknown message message and respond with Do not understand' do
     token = 'fake_token'
 
