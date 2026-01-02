@@ -1,0 +1,29 @@
+name: Pipeline Agendda-Bot
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build_job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+          bundler-cache: true
+
+      - name: Run RuboCop (Linter)
+        run: bundle exec rubocop
+
+      - name: Run Tests (RSpec)
+        run: bundle exec rake spec
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN_TEST }}
