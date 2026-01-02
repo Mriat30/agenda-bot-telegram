@@ -2,7 +2,7 @@ require "#{File.dirname(__FILE__)}/../lib/routing"
 require "#{File.dirname(__FILE__)}/../lib/version"
 require "#{File.dirname(__FILE__)}/tv/series"
 
-class Routes
+class MainRouter
   include Routing
 
   on_message '/start' do |bot, message|
