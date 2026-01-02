@@ -18,12 +18,15 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3.1'
-          bundler-cache: true
+          bundler-cache: false
 
-      - name: Run RuboCop (Linter)
-        run: bundle exec rubocop
+      - name: Install Bundler and Dependencies
+        run: |
+          gem install bundler -v 2.3.26 # Replicamos la versión de GitLab
+          bundle _2.3.26_ install --without staging production # Replicamos los flags de GitLab
 
-      - name: Run Tests (RSpec)
-        run: bundle exec rake spec
+      - name: Run Build Server (Linter + Tests)
+        run: bundle exec rake build_server
         env:
+          APP_MODE: test
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN_TEST }}
