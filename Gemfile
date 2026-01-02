@@ -9,6 +9,7 @@ gem 'telegram-bot-ruby'
 group :development, :test do
   gem 'debug'
   gem 'racc'
+  gem 'webrick'
   gem 'rspec'
   gem 'rspec_junit_formatter'
   gem 'rubocop', '1.50.2', require: false
