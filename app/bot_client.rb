@@ -1,5 +1,6 @@
 require 'telegram/bot'
 require "#{File.dirname(__FILE__)}/../app/routers/main_router"
+require "#{File.dirname(__FILE__)}/../app/dependencias"
 require 'semantic_logger'
 
 class BotClient
@@ -18,6 +19,7 @@ class BotClient
       )
     end
     @logger = SemanticLogger['BotClient']
+    Dependencias.construir(@logger)
   end
 
   def start
