@@ -4,5 +4,25 @@ class RepositorioUsuarios
     @logger = logger
   end
 
-  def guardar(usuario); end
+  def guardar(usuario)
+    @logger.info "Registrando usuario:
+     nombre=#{usuario.nombre},
+     apellido=#{usuario.apellido}, telefono=#{usuario.nombre}, domicilio=#{usuario.domicilio}"
+    respuesta = post_request(usuario)
+    respuesta.status == 201
+  end
+
+  private
+
+  def post_request(usuario)
+    body = { 'id' => usuario.id,
+             'nombre' => usuario.nombre,
+             'apellido' => usuario.apellido,
+             'telefono' => usuario.telefono,
+             'domicilio' => usuario.domicilio }
+    Faraday.post("#{@api_url}/users") do |req|
+      req.headers['Content-Type'] = 'application/json'
+      req.body = body.to_json
+    end
+  end
 end
