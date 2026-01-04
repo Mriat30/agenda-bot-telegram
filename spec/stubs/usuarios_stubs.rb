@@ -1,6 +1,6 @@
 require 'web_mock'
 
-def cuando_me_registro_exitosamente(_token, api_url, usuario)
+def cuando_me_registro_exitosamente(api_url, usuario)
   datos_usuario = {
     id: usuario.id,
     nombre: usuario.nombre,
@@ -18,4 +18,28 @@ def cuando_me_registro_exitosamente(_token, api_url, usuario)
       }
     )
     .to_return(status: 201, body: '', headers: {})
+end
+
+def entonces_obtengo_bienvenida_con_botones(token, message_text)
+  stub_request(:post, "https://api.telegram.org/bot#{token}/sendMessage")
+    .with(
+      body: {
+        'chat_id' => '141733544',
+        'text' => message_text,
+        'reply_markup' => '{"inline_keyboard":[[{"text":"Registrarme","callback_data":"register"}]]}'
+      }
+    )
+    .to_return(status: 200, body: { "ok": true }.to_json, headers: {})
+end
+
+def entonces_obtengo_texto_con_force_reply(token, text)
+  stub_request(:post, "https://api.telegram.org/bot#{token}/sendMessage")
+    .with(
+      body: hash_including({
+                             'chat_id' => '141733544',
+                             'text' => text,
+                             'reply_markup' => '{"force_reply":true}'
+                           })
+    )
+    .to_return(status: 200, body: { ok: true }.to_json, headers: {})
 end

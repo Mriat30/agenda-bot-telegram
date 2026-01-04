@@ -20,7 +20,7 @@ describe RepositorioUsuarios do
     usuario = Usuario.new('1', 'test', 'sito',
                           '1234567899',
                           'Esquel 770')
-    cuando_me_registro_exitosamente('fake_token', api_url, usuario)
+    cuando_me_registro_exitosamente(api_url, usuario)
     resultado = repositorio.guardar(usuario)
 
     expect(resultado).to eq(true)
