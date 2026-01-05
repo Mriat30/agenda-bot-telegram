@@ -1,4 +1,5 @@
 require "#{File.dirname(__FILE__)}/../../lib/routing"
+require_relative '../vistas/vista_registracion'
 
 class UsuariosRouter
   include Routing
@@ -18,39 +19,45 @@ class UsuariosRouter
   end
 
   on_message 'Hola' do |bot, message|
-    kb = [[Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Registrarme', callback_data: 'register')]]
-    markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: kb)
-
-    bot.api.send_message(
-      chat_id: message.chat.id,
-      text: 'Hola! Soy el asistente de Valeria Sapulia...',
-      reply_markup: markup
-    )
+    VistaRegistracion.new(bot, message).bienvenida
   end
 
   on_response_to 'Hola! Soy el asistente de Valeria Sapulia...' do |bot, message|
     if message.data == 'register'
-      UsuariosRouter.user_states[message.message.chat.id] = { step: :nombre }
-      bot.api.send_message(chat_id: message.message.chat.id, text: '¿Podrias decirme tu nombre?')
+      id = VistaBase.new(bot, message).chat_id
+      UsuariosRouter.user_states[id] = { step: :nombre }
+      VistaRegistracion.new(bot, message).pedir_nombre
     end
   end
 
   on_message_pattern(/.*/) do |bot, message, _|
-    state = UsuariosRouter.user_states[message.chat.id]
+    id = message.chat.id
+    state = UsuariosRouter.user_states[id]
     next unless state
 
-    pasos = { nombre: [:apellido, 'apellido'], apellido: [:telefono, 'telefono'], telefono: [:domicilio, 'domicilio'] }
+    vista = VistaRegistracion.new(bot, message)
+    pasos = {
+      nombre: [:apellido, 'apellido'],
+      apellido: [:telefono, 'telefono'],
+      telefono: [:domicilio, 'domicilio']
+    }
 
     if pasos.key?(state[:step])
-      proximo, texto = pasos[state[:step]]
+      proximo, etiqueta = pasos[state[:step]]
       state[state[:step]] = message.text
       state[:step] = proximo
-      bot.api.send_message(chat_id: message.chat.id, text: "Por favor, decime tu #{texto}")
+      vista.pedir_dato(etiqueta)
     elsif state[:step] == :domicilio
-      state[:domicilio] = message.text
-      UsuariosRouter.registrar_usuario_caso_de_uso&.ejecutar(message.chat.id.to_s, state[:nombre], state[:apellido], state[:telefono], state[:domicilio])
-      bot.api.send_message(chat_id: message.chat.id, text: 'Perfecto, ya registre tus datos!')
-      UsuariosRouter.user_states.delete(message.chat.id)
+      finalizar_registro(bot, message, state, vista)
     end
+  end
+
+  def self.finalizar_registro(_bot, message, state, vista)
+    state[:domicilio] = message.text
+    registrar_usuario_caso_de_uso&.ejecutar(
+      message.chat.id.to_s, state[:nombre], state[:apellido], state[:telefono], state[:domicilio]
+    )
+    vista.registro_exitoso
+    user_states.delete(message.chat.id)
   end
 end
