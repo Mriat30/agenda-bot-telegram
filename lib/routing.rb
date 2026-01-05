@@ -41,8 +41,14 @@ module Routing
 
     if !handler.nil?
       handler.call(bot, message, named_captures)
+      true
     else
-      (handler || default_handler(message)).call(bot, message)
+      default_h = Routing.message_handlers[DEFAULT]
+      if default_h
+        default_h.call(bot, message)
+        return true
+      end
+      false
     end
   end
 

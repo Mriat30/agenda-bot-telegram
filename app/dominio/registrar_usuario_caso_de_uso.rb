@@ -1,3 +1,5 @@
+require_relative '../../modelo/usuario'
+
 class RegistrarUsuarioCasoDeUso
   def initialize(repositorio_usuarios)
     @repositorio_usuarios = repositorio_usuarios

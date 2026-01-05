@@ -1,6 +1,7 @@
 require 'telegram/bot'
 require "#{File.dirname(__FILE__)}/../app/routers/main_router"
 require "#{File.dirname(__FILE__)}/../app/routers/usuarios_router"
+require "#{File.dirname(__FILE__)}/../app/routers/application_router"
 require "#{File.dirname(__FILE__)}/../app/dependencias"
 require 'semantic_logger'
 
@@ -21,7 +22,7 @@ class BotClient
     end
     @logger = SemanticLogger['BotClient']
     @api_url = ENV['API_URL']
-    Dependencias.construir(@api_url, @logger)
+    inyectar_dependencias(@api_url, @logger)
   end
 
   def start
@@ -43,14 +44,17 @@ class BotClient
 
   private
 
+  def inyectar_dependencias(api_url, logger)
+    dependencias = Dependencias.new(api_url, logger)
+    @router = ApplicationRouter.new(logger, dependencias)
+  end
+
   def run_client(&block)
     Telegram::Bot::Client.run(@token, logger: @logger) { |bot| block.call bot }
   end
 
   def handle_message(message, bot)
     @logger.debug "From: @#{message.from.username}, message: #{message.inspect}"
-
-    MainRouter.new.handle(bot, message)
-    UsuariosRouter.new.handle(bot, message)
+    @router.handle(bot, message)
   end
 end

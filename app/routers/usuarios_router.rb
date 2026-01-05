@@ -3,13 +3,18 @@ require "#{File.dirname(__FILE__)}/../../lib/routing"
 class UsuariosRouter
   include Routing
 
-  def self.construir(logger, registrar_usuario_caso_de_uso)
-    @logger = logger
-    @registrar_usuario_caso_de_uso = registrar_usuario_caso_de_uso
-  end
+  @user_states = {}
+  @logger = nil
+  @registrar_usuario_caso_de_uso = nil
 
   class << self
-    attr_reader :logger, :registrar_usuario_caso_de_uso
+    attr_accessor :user_states, :logger, :registrar_usuario_caso_de_uso
+  end
+
+  def initialize(logger, registrar_usuario_caso_de_uso)
+    self.class.logger = logger
+    self.class.registrar_usuario_caso_de_uso = registrar_usuario_caso_de_uso
+    self.class.user_states = {} if self.class.user_states.nil? || self.class.user_states.empty?
   end
 
   on_message 'Hola' do |bot, message|
@@ -25,39 +30,27 @@ class UsuariosRouter
 
   on_response_to 'Hola! Soy el asistente de Valeria Sapulia...' do |bot, message|
     if message.data == 'register'
-      bot.api.send_message(
-        chat_id: message.message.chat.id,
-        text: '¿Podrias decirme tu nombre?',
-        reply_markup: Telegram::Bot::Types::ForceReply.new(force_reply: true)
-      )
+      UsuariosRouter.user_states[message.message.chat.id] = { step: :nombre }
+      bot.api.send_message(chat_id: message.message.chat.id, text: '¿Podrias decirme tu nombre?')
     end
   end
 
-  on_reply_to '¿Podrias decirme tu nombre?' do |bot, message|
-    bot.api.send_message(
-      chat_id: message.chat.id,
-      text: 'Por favor, decime tu apellido',
-      reply_markup: Telegram::Bot::Types::ForceReply.new(force_reply: true)
-    )
-  end
+  on_message_pattern(/.*/) do |bot, message, _|
+    state = UsuariosRouter.user_states[message.chat.id]
+    next unless state
 
-  on_reply_to 'Por favor, decime tu apellido' do |bot, message|
-    bot.api.send_message(
-      chat_id: message.chat.id,
-      text: 'Por favor, decime tu telefono',
-      reply_markup: Telegram::Bot::Types::ForceReply.new(force_reply: true)
-    )
-  end
+    pasos = { nombre: [:apellido, 'apellido'], apellido: [:telefono, 'telefono'], telefono: [:domicilio, 'domicilio'] }
 
-  on_reply_to 'Por favor, decime tu telefono' do |bot, message|
-    bot.api.send_message(
-      chat_id: message.chat.id,
-      text: 'Por favor, decime tu domicilio',
-      reply_markup: Telegram::Bot::Types::ForceReply.new(force_reply: true)
-    )
-  end
-
-  on_reply_to 'Por favor, decime tu domicilio' do |bot, message|
-    bot.api.send_message(chat_id: message.chat.id, text: 'Perfecto, ya registre tus datos!')
+    if pasos.key?(state[:step])
+      proximo, texto = pasos[state[:step]]
+      state[state[:step]] = message.text
+      state[:step] = proximo
+      bot.api.send_message(chat_id: message.chat.id, text: "Por favor, decime tu #{texto}")
+    elsif state[:step] == :domicilio
+      state[:domicilio] = message.text
+      UsuariosRouter.registrar_usuario_caso_de_uso&.ejecutar(message.chat.id.to_s, state[:nombre], state[:apellido], state[:telefono], state[:domicilio])
+      bot.api.send_message(chat_id: message.chat.id, text: 'Perfecto, ya registre tus datos!')
+      UsuariosRouter.user_states.delete(message.chat.id)
+    end
   end
 end

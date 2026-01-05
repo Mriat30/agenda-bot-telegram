@@ -4,7 +4,7 @@ require "#{File.dirname(__FILE__)}/../../lib/routing"
 class MainRouter
   include Routing
 
-  def self.construir(logger)
+  def initialize(logger)
     @logger = logger
   end
 
