@@ -2,6 +2,20 @@ require 'spec_helper'
 require_relative '../stubs/usuarios_stubs'
 require_relative '../stubs/bot_client_stubs'
 
+def entonces_el_registro_es_exitoso
+  expect(WebMock).to have_requested(:post, "#{api_url}/users")
+    .with(
+      body: {
+        telegramId: '141733544',
+        name: 'test',
+        lastName: 'sito',
+        phone: '123456',
+        address: 'Esquel 770'
+      }.to_json,
+      headers: { 'Content-Type' => 'application/json' }
+    ).once
+end
+
 describe 'RegistracionUsuario' do
   let(:token) { 'fake_token' }
   let(:api_url) { 'http://fake_url.com' }
@@ -14,15 +28,19 @@ describe 'RegistracionUsuario' do
   it 'RU1: Dado que no estoy registrado, cuando envio "Hola", recibo formulario de registracion' do
     usuario = Usuario.new('141733544', 'test', 'sito', '123456', 'Esquel 770')
 
-    registrar_todos_los_stubs(token)
+    stubs_flujo_registracion(token)
     cuando_me_registro_exitosamente(api_url, usuario)
 
     cuando_realizo_el_flujo_de_registracion(token, usuario)
+    entonces_el_registro_es_exitoso
+  end
+
+  it 'RU2: Dado que estoy registrado, cuando envio "Hola", recibo el menu principal' do
   end
 
   private
 
-  def registrar_todos_los_stubs(token)
+  def stubs_flujo_registracion(token)
     entonces_obtengo_bienvenida_con_botones(token, 'Hola! Soy el asistente de Valeria Sapulia...')
     entonces_obtengo_texto(token, '¿Podrias decirme tu nombre?')
     entonces_obtengo_texto(token, 'Por favor, decime tu apellido')
