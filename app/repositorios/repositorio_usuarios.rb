@@ -15,11 +15,13 @@ class RepositorioUsuarios
   private
 
   def post_request(usuario)
-    body = { 'id' => usuario.id,
-             'nombre' => usuario.nombre,
-             'apellido' => usuario.apellido,
-             'telefono' => usuario.telefono,
-             'domicilio' => usuario.domicilio }
+    body = {
+      'telegramId' => usuario.id,
+      'name' => usuario.nombre,
+      'lastName' => usuario.apellido,
+      'phone' => usuario.telefono,
+      'address' => usuario.domicilio
+    }
     Faraday.post("#{@api_url}/users") do |req|
       req.headers['Content-Type'] = 'application/json'
       req.body = body.to_json

@@ -2,11 +2,11 @@ require 'web_mock'
 
 def cuando_me_registro_exitosamente(api_url, usuario)
   datos_usuario = {
-    id: usuario.id,
-    nombre: usuario.nombre,
-    apellido: usuario.apellido,
-    telefono: usuario.telefono,
-    domicilio: usuario.domicilio
+    telegramId: usuario.id,
+    name: usuario.nombre,
+    lastName: usuario.apellido,
+    phone: usuario.telefono,
+    address: usuario.domicilio
   }
 
   stub_request(:post, "#{api_url}/users")

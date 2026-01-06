@@ -1,16 +1,21 @@
 version: '3.9'
+
 services:
   bot:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    command: "/bin/sh"
+    container_name: ruby-bot-app
+    command: bundle exec ruby app.rb
     stdin_open: true
     tty: true
     volumes:
-        - .:/app
-    environment:
-        APP_MODE: "test"
+      - .:/app
+    env_file:
+      - .env
+    networks:
+      - localdev
+
 networks:
-  default:
+  localdev:
     name: localdev
