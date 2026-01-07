@@ -20,6 +20,24 @@ def cuando_me_registro_exitosamente(api_url, usuario)
     .to_return(status: 201, body: '', headers: {})
 end
 
+def cuando_obtengo_un_usuario_mediante_su_telefono_exitosamente(api_url, usuario)
+  cuerpo_respuesta = {
+    telegram_id: usuario.id,
+    name: usuario.nombre,
+    last_name: usuario.apellido,
+    phone: usuario.telefono,
+    address: usuario.domicilio
+  }.to_json
+
+  stub_request(:get, "#{api_url}/users")
+    .with(query: { phone: usuario.telefono })
+    .to_return(
+      status: 200,
+      body: cuerpo_respuesta,
+      headers: { 'Content-Type' => 'application/json' }
+    )
+end
+
 def cuando_me_registro_fallidamente_por_telefono_en_uso(api_url, usuario)
   datos_usuario = {
     telegramId: usuario.id,

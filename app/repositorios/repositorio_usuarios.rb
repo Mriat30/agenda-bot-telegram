@@ -17,7 +17,23 @@ class RepositorioUsuarios
     manejar_respuesta_al_guardar(respuesta)
   end
 
-  def encontrar_por_telefono(un_telefono); end
+  def encontrar_por_telefono(un_telefono)
+    respuesta = Faraday.get("#{@api_url}/users") do |req|
+      req.params['phone'] = un_telefono
+      req.headers['Accept'] = 'application/json'
+    end
+
+    return nil if respuesta.status == 404
+
+    body = JSON.parse(respuesta.body)
+    Usuario.new(
+      body['telegram_id'],
+      body['name'],
+      body['last_name'],
+      body['phone'],
+      body['address']
+    )
+  end
 
   private
 
