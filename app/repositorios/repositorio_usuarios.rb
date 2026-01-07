@@ -17,6 +17,8 @@ class RepositorioUsuarios
     manejar_respuesta_al_guardar(respuesta)
   end
 
+  def encontrar_por_telefono(un_telefono); end
+
   private
 
   def manejar_respuesta_al_guardar(respuesta)
