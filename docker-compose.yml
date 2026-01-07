@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   bot:
     build:
@@ -18,4 +16,4 @@ services:
 
 networks:
   localdev:
-    name: localdev
+    external: true

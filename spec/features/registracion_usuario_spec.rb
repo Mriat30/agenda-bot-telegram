@@ -35,7 +35,14 @@ describe 'RegistracionUsuario' do
     entonces_el_registro_es_exitoso
   end
 
-  it 'RU2: Dado que estoy registrado, cuando envio "Hola", recibo el menu principal' do
+  xit 'RU2: Dado que el telfono "123456" esta registrado, al intentar registrarme veo error' do
+    usuario = Usuario.new('141733544', 'test', 'sito', '123456', 'Esquel 770')
+
+    stubs_flujo_registracion(token)
+    cuando_me_registro_con_telefono_usado(api_url, usuario)
+
+    cuando_realizo_el_flujo_de_registracion(token, usuario)
+    entonces_el_registro_falla(mensaje, status)
   end
 
   private

@@ -4,18 +4,18 @@ require_relative '../vistas/vista_registracion'
 class UsuariosRouter
   include Routing
 
-  @user_states = {}
+  @estados_usuario = {}
   @logger = nil
   @registrar_usuario_caso_de_uso = nil
 
   class << self
-    attr_accessor :user_states, :logger, :registrar_usuario_caso_de_uso
+    attr_accessor :estados_usuario, :logger, :registrar_usuario_caso_de_uso
   end
 
   def initialize(logger, registrar_usuario_caso_de_uso)
     self.class.logger = logger
     self.class.registrar_usuario_caso_de_uso = registrar_usuario_caso_de_uso
-    self.class.user_states = {} if self.class.user_states.nil? || self.class.user_states.empty?
+    self.class.estados_usuario = {} if self.class.estados_usuario.nil? || self.class.estados_usuario.empty?
   end
 
   on_message 'Hola' do |bot, message|
@@ -25,14 +25,14 @@ class UsuariosRouter
   on_response_to 'Hola! Soy el asistente de Valeria Sapulia...' do |bot, message|
     if message.data == 'register'
       id = VistaBase.new(bot, message).chat_id
-      UsuariosRouter.user_states[id] = { step: :nombre }
+      UsuariosRouter.estados_usuario[id] = { step: :nombre }
       VistaRegistracion.new(bot, message).pedir_nombre
     end
   end
 
   on_message_pattern(/.*/) do |bot, message, _|
     id = message.chat.id
-    state = UsuariosRouter.user_states[id]
+    state = UsuariosRouter.estados_usuario[id]
     next unless state
 
     vista = VistaRegistracion.new(bot, message)
@@ -58,6 +58,6 @@ class UsuariosRouter
       message.chat.id.to_s, state[:nombre], state[:apellido], state[:telefono], state[:domicilio]
     )
     vista.registro_exitoso
-    user_states.delete(message.chat.id)
+    estados_usuario.delete(message.chat.id)
   end
 end
