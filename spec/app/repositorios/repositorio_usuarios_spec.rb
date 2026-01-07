@@ -59,4 +59,17 @@ describe RepositorioUsuarios do
       expect(resultado).to eq(nil)
     end
   end
+
+  describe 'encontrar_por_id' do
+    it 'devuelve un usuario segun su numero id, si este esta registrado' do
+      un_id = '1234567'
+      usuario = Usuario.new(un_id, 'test', 'sito', '1234561', 'Esquel 770')
+      cuando_obtengo_un_usuario_mediante_su_id_exitosamente(api_url, usuario)
+
+      resultado = repositorio.encontrar_por_id(un_id)
+
+      expect(resultado.id).to eq(usuario.id)
+      expect(resultado.telefono).to eq(usuario.telefono)
+    end
+  end
 end

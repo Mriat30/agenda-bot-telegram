@@ -35,7 +35,21 @@ class RepositorioUsuarios
     )
   end
 
-  def encontrar_por_id(id); end
+  def encontrar_por_id(un_id)
+    respuesta = Faraday.get("#{@api_url}/users") do |req|
+      req.params['telegram_id'] = un_id
+      req.headers['Accept'] = 'application/json'
+    end
+
+    body = JSON.parse(respuesta.body)
+    Usuario.new(
+      body['telegram_id'],
+      body['name'],
+      body['last_name'],
+      body['phone'],
+      body['address']
+    )
+  end
 
   private
 

@@ -38,6 +38,24 @@ def cuando_obtengo_un_usuario_mediante_su_telefono_exitosamente(api_url, usuario
     )
 end
 
+def cuando_obtengo_un_usuario_mediante_su_id_exitosamente(api_url, usuario)
+  cuerpo_respuesta = {
+    telegram_id: usuario.id,
+    name: usuario.nombre,
+    last_name: usuario.apellido,
+    phone: usuario.telefono,
+    address: usuario.domicilio
+  }.to_json
+
+  stub_request(:get, "#{api_url}/users")
+    .with(query: { telegram_id: usuario.id })
+    .to_return(
+      status: 200,
+      body: cuerpo_respuesta,
+      headers: { 'Content-Type' => 'application/json' }
+    )
+end
+
 def cuando_no_encuentro_el_usuario_segun_su_numero_de_telefono(api_url, usuario)
   stub_request(:get, "#{api_url}/users")
     .with(query: { phone: usuario.telefono })
