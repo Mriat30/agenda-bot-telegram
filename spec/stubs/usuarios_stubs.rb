@@ -38,6 +38,16 @@ def cuando_obtengo_un_usuario_mediante_su_telefono_exitosamente(api_url, usuario
     )
 end
 
+def cuando_no_encuentro_el_usuario_segun_su_numero_de_telefono(api_url, usuario)
+  stub_request(:get, "#{api_url}/users")
+    .with(query: { phone: usuario.telefono })
+    .to_return(
+      status: 404,
+      body: '',
+      headers: { 'Content-Type' => 'application/json' }
+    )
+end
+
 def cuando_me_registro_fallidamente_por_telefono_en_uso(api_url, usuario)
   datos_usuario = {
     telegramId: usuario.id,
