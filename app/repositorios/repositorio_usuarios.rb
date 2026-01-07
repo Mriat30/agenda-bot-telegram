@@ -41,6 +41,8 @@ class RepositorioUsuarios
       req.headers['Accept'] = 'application/json'
     end
 
+    return nil if respuesta.status == 404
+
     body = JSON.parse(respuesta.body)
     Usuario.new(
       body['telegram_id'],

@@ -71,5 +71,15 @@ describe RepositorioUsuarios do
       expect(resultado.id).to eq(usuario.id)
       expect(resultado.telefono).to eq(usuario.telefono)
     end
+
+    it 'si el usuario no existe devuelve nil' do
+      un_id = '1234567'
+      usuario = Usuario.new(un_id, 'test', 'sito', '12345', 'Esquel 770')
+      cuando_no_encuentro_el_usuario_segun_su_id(api_url, usuario)
+
+      resultado = repositorio.encontrar_por_id(un_id)
+
+      expect(resultado).to eq(nil)
+    end
   end
 end
