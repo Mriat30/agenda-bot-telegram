@@ -35,6 +35,8 @@ class RepositorioUsuarios
     )
   end
 
+  def encontrar_por_id(id); end
+
   private
 
   def manejar_respuesta_al_guardar(respuesta)
