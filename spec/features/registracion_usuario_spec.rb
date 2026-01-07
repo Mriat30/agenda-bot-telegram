@@ -46,6 +46,18 @@ describe 'RegistracionUsuario' do
       .with(body: hash_including('text' => '⚠️ El teléfono ya se encuentra registrado'))
   end
 
+  xit 'RU3: Dado que el usuario ya esta registrado, al enviar un mensaje recibo el menu principal' do
+    usuario_existente = Usuario.new('141733544', 'Juan', 'Perez', '123456', 'Esquel 770')
+    cuando_el_usuario_ya_existe(api_url, usuario_existente)
+    entonces_obtengo_bienvenida_usuario_registrado(token, 'Hola Juan! ¿Qué te gustaría hacer hoy?')
+
+    cuando_envio_texto(token, 'Hola')
+    app.run_once
+
+    expect(WebMock).to have_requested(:post, "https://api.telegram.org/bot#{token}/sendMessage")
+      .with(body: hash_including('text' => /Hola Juan/))
+  end
+
   private
 
   def stubs_preguntas_registracion(token)
