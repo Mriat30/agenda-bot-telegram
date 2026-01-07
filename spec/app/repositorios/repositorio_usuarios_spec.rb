@@ -25,4 +25,15 @@ describe RepositorioUsuarios do
 
     expect(resultado).to eq(true)
   end
+
+  it 'al querer guardar un usuario con el telefono ya registradp, lanza error' do
+    usuario = Usuario.new('1', 'test', 'sito',
+                          '1234567899',
+                          'Esquel 770')
+    cuando_me_registro_fallidamente_por_telefono_en_uso(api_url, usuario)
+
+    expect do
+      repositorio.guardar(usuario)
+    end.to raise_error(RepositorioUsuarios::ErrorDeConflicto, 'El teléfono ya se encuentra registrado')
+  end
 end
