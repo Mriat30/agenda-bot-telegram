@@ -37,14 +37,26 @@ describe RepositorioUsuarios do
     end.to raise_error(RepositorioUsuarios::ErrorDeConflicto, 'El teléfono ya se encuentra registrado')
   end
 
-  it 'devuelve un usuario segun su numero de telfono, si este esta registrado' do
-    un_telefono = '1234567'
-    usuario = Usuario.new('1', 'test', 'sito', un_telefono, 'Esquel 770')
-    cuando_obtengo_un_usuario_mediante_su_telefono_exitosamente(api_url, usuario)
+  describe 'encontrar_por_telefono' do
+    it 'devuelve un usuario segun su numero de telfono, si este esta registrado' do
+      un_telefono = '1234567'
+      usuario = Usuario.new('1', 'test', 'sito', un_telefono, 'Esquel 770')
+      cuando_obtengo_un_usuario_mediante_su_telefono_exitosamente(api_url, usuario)
 
-    resultado = repositorio.encontrar_por_telefono(un_telefono)
+      resultado = repositorio.encontrar_por_telefono(un_telefono)
 
-    expect(resultado.id).to eq(usuario.id)
-    expect(resultado.telefono).to eq(usuario.telefono)
+      expect(resultado.id).to eq(usuario.id)
+      expect(resultado.telefono).to eq(usuario.telefono)
+    end
+
+    it 'si el usuario no existe devuelve nil' do
+      un_telefono = '1234567'
+      usuario = Usuario.new('1', 'test', 'sito', un_telefono, 'Esquel 770')
+      cuando_no_encuentro_el_usuario_segun_su_numero_de_telefono(api_url, usuario)
+
+      resultado = repositorio.encontrar_por_telefono(un_telefono)
+
+      expect(resultado).to eq(nil)
+    end
   end
 end
