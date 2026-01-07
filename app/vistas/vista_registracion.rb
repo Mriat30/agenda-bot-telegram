@@ -18,4 +18,8 @@ class VistaRegistracion < VistaBase
   def registro_exitoso
     mandar_mensaje('Perfecto, ya registre tus datos!')
   end
+
+  def error_de_registro(mensaje)
+    mandar_mensaje(mensaje)
+  end
 end

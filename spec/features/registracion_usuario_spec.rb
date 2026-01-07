@@ -35,24 +35,29 @@ describe 'RegistracionUsuario' do
     entonces_el_registro_es_exitoso
   end
 
-  xit 'RU2: Dado que el telfono "123456" esta registrado, al intentar registrarme veo error' do
-    usuario = Usuario.new('141733544', 'test', 'sito', '123456', 'Esquel 770')
-
-    stubs_flujo_registracion(token)
-    cuando_me_registro_con_telefono_usado(api_url, usuario)
-
+  it 'RU2: Dado que el telefono "123456" esta registrado, al intentar registrarme veo error' do
+    usuario = Usuario.new('141733544', 'Juan', 'Perez', '123456', 'Esquel 770')
+    stubs_preguntas_registracion(token)
+    entonces_obtengo_texto(token, '⚠️ El teléfono ya se encuentra registrado')
+    cuando_me_registro_fallidamente_por_telefono_en_uso(api_url, usuario)
     cuando_realizo_el_flujo_de_registracion(token, usuario)
-    entonces_el_registro_falla(mensaje, status)
+
+    expect(WebMock).to have_requested(:post, "https://api.telegram.org/bot#{token}/sendMessage")
+      .with(body: hash_including('text' => '⚠️ El teléfono ya se encuentra registrado'))
   end
 
   private
 
-  def stubs_flujo_registracion(token)
+  def stubs_preguntas_registracion(token)
     entonces_obtengo_bienvenida_con_botones(token, 'Hola! Soy el asistente de Valeria Sapulia...')
     entonces_obtengo_texto(token, '¿Podrias decirme tu nombre?')
     entonces_obtengo_texto(token, 'Por favor, decime tu apellido')
     entonces_obtengo_texto(token, 'Por favor, decime tu telefono')
     entonces_obtengo_texto(token, 'Por favor, decime tu domicilio')
+  end
+
+  def stubs_flujo_registracion(token)
+    stubs_preguntas_registracion(token)
     entonces_obtengo_texto(token, 'Perfecto, ya registre tus datos!')
   end
 

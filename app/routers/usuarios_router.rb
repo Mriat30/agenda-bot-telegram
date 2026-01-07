@@ -54,10 +54,25 @@ class UsuariosRouter
 
   def self.finalizar_registro(_bot, message, state, vista)
     state[:domicilio] = message.text
+    intentar_registro(message.chat.id, state, vista)
+  end
+
+  private_class_method def self.intentar_registro(chat_id, state, vista)
     registrar_usuario_caso_de_uso&.ejecutar(
-      message.chat.id.to_s, state[:nombre], state[:apellido], state[:telefono], state[:domicilio]
+      chat_id.to_s, state[:nombre], state[:apellido], state[:telefono], state[:domicilio]
     )
+    finalizar_flujo_exitoso(chat_id, vista)
+  rescue RepositorioUsuarios::ErrorDeConflicto => e
+    finalizar_flujo_con_error(chat_id, vista, e.message)
+  end
+
+  private_class_method def self.finalizar_flujo_exitoso(chat_id, vista)
     vista.registro_exitoso
-    estados_usuario.delete(message.chat.id)
+    estados_usuario.delete(chat_id)
+  end
+
+  private_class_method def self.finalizar_flujo_con_error(chat_id, vista, mensaje)
+    vista.error_de_registro("⚠️ #{mensaje}")
+    estados_usuario.delete(chat_id)
   end
 end
