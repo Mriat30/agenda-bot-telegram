@@ -45,8 +45,7 @@ class BotClient
   private
 
   def inyectar_dependencias(api_url, logger)
-    dependencias = Dependencias.new(api_url, logger)
-    @router = ApplicationRouter.new(logger, dependencias)
+    @router = Dependencias.new(api_url, logger).application_router
   end
 
   def run_client(&block)

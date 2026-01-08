@@ -2,12 +2,9 @@ require_relative '../routers/main_router'
 require_relative '../routers/usuarios_router'
 
 class ApplicationRouter
-  def initialize(logger, dependencias)
+  def initialize(logger, routers)
     @logger = logger
-    @routers = [
-      UsuariosRouter.new(logger, dependencias.registrar_usuario_caso_de_uso),
-      MainRouter.new(logger)
-    ]
+    @routers = routers
   end
 
   def handle(bot, message)
