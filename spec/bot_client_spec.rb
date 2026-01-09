@@ -47,15 +47,4 @@ describe 'BotClient' do
 
     app.run_once
   end
-
-  it 'should get an unknown message message and respond with Do not understand' do
-    token = 'fake_token'
-
-    cuando_envio_texto(token, '/unknown')
-    entonces_obtengo_texto(token, 'Uh? No te entiendo! Me repetis la pregunta?')
-
-    app = BotClient.new(token)
-
-    app.run_once
-  end
 end

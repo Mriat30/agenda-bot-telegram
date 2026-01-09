@@ -27,6 +27,7 @@ describe 'RegistracionUsuario' do
 
   it 'RU1: Dado que no estoy registrado, cuando envio "Hola", recibo formulario de registracion' do
     usuario = Usuario.new('141733544', 'test', 'sito', '123456', 'Esquel 770')
+    cuando_el_usuario_no_existe(api_url, usuario)
 
     stubs_flujo_registracion(token)
     cuando_me_registro_exitosamente(api_url, usuario)
@@ -38,6 +39,8 @@ describe 'RegistracionUsuario' do
   it 'RU2: Dado que el telefono "123456" esta registrado, al intentar registrarme veo error' do
     usuario = Usuario.new('141733544', 'Juan', 'Perez', '123456', 'Esquel 770')
     stubs_preguntas_registracion(token)
+    cuando_el_usuario_no_existe(api_url, usuario)
+
     entonces_obtengo_texto(token, '⚠️ El teléfono ya se encuentra registrado')
     cuando_me_registro_fallidamente_por_telefono_en_uso(api_url, usuario)
     cuando_realizo_el_flujo_de_registracion(token, usuario)

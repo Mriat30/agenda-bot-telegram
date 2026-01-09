@@ -22,9 +22,9 @@ end
 
 def cuando_obtengo_un_usuario_mediante_su_telefono_exitosamente(api_url, usuario)
   cuerpo_respuesta = {
-    telegram_id: usuario.id,
+    telegramId: usuario.id,
     name: usuario.nombre,
-    last_name: usuario.apellido,
+    lastName: usuario.apellido,
     phone: usuario.telefono,
     address: usuario.domicilio
   }.to_json
@@ -50,15 +50,15 @@ end
 
 def cuando_obtengo_un_usuario_mediante_su_id_exitosamente(api_url, usuario)
   cuerpo_respuesta = {
-    telegram_id: usuario.id,
+    telegramId: usuario.id,
     name: usuario.nombre,
-    last_name: usuario.apellido,
+    lastName: usuario.apellido,
     phone: usuario.telefono,
     address: usuario.domicilio
   }.to_json
 
   stub_request(:get, "#{api_url}/users")
-    .with(query: { telegram_id: usuario.id })
+    .with(query: { telegramId: usuario.id })
     .to_return(
       status: 200,
       body: cuerpo_respuesta,
@@ -68,7 +68,7 @@ end
 
 def cuando_no_encuentro_el_usuario_segun_su_id(api_url, usuario)
   stub_request(:get, "#{api_url}/users")
-    .with(query: { telegram_id: usuario.id })
+    .with(query: { telegramId: usuario.id })
     .to_return(
       status: 404,
       body: '',
@@ -127,4 +127,10 @@ def entonces_obtengo_texto_con_force_reply(token, text)
                            })
     )
     .to_return(status: 200, body: { ok: true }.to_json, headers: {})
+end
+
+def cuando_el_usuario_no_existe(api_url, usuario)
+  stub_request(:get, "#{api_url}/users?telegramId=#{usuario.id}")
+    .with(headers: { 'Accept' => 'application/json' })
+    .to_return(status: 200, body: [].to_json, headers: { 'Content-Type' => 'application/json' })
 end

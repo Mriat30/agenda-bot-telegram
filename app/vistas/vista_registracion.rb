@@ -11,6 +11,18 @@ class VistaRegistracion < VistaBase
     mandar_mensaje('¿Podrias decirme tu nombre?')
   end
 
+  def pedir_apellido
+    mandar_mensaje('Por favor, decime tu apellido')
+  end
+
+  def pedir_telefono
+    mandar_mensaje('Por favor, decime tu telefono')
+  end
+
+  def pedir_domicilio
+    mandar_mensaje('Por favor, decime tu domicilio')
+  end
+
   def pedir_dato(campo)
     mandar_mensaje("Por favor, decime tu #{campo}")
   end

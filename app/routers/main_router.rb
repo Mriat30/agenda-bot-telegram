@@ -23,8 +23,4 @@ class MainRouter
   on_message '/version' do |bot, message|
     bot.api.send_message(chat_id: message.chat.id, text: Version.current)
   end
-
-  default do |bot, message|
-    bot.api.send_message(chat_id: message.chat.id, text: 'Uh? No te entiendo! Me repetis la pregunta?')
-  end
 end
