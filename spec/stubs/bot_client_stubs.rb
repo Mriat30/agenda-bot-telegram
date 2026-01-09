@@ -1,8 +1,8 @@
 def cuando_envio_texto(token, message_text, reply_to_message_text = nil)
   message_body = {
     "message_id": 11,
-    "from": { "id": 141_733_544, "is_bot": false, "first_name": 'Emilio', "last_name": 'Gutter', "username": 'egutter', "language_code": 'en' },
-    "chat": { "id": 141_733_544, "first_name": 'Emilio', "last_name": 'Gutter', "username": 'egutter', "type": 'private' },
+    "from": { "id": 141_733_544, "is_bot": false, "first_name": 'Emilio', "lastName": 'Gutter', "username": 'egutter', "language_code": 'en' },
+    "chat": { "id": 141_733_544, "first_name": 'Emilio', "lastName": 'Gutter', "username": 'egutter', "type": 'private' },
     "date": 1_557_782_998,
     "text": message_text,
     "entities": [{ "offset": 0, "length": 6, "type": 'bot_command' }]
@@ -12,7 +12,7 @@ def cuando_envio_texto(token, message_text, reply_to_message_text = nil)
     message_body[:reply_to_message] = {
       "message_id": 10,
       "from": { "id": 715_612_264, "is_bot": true, "first_name": 'fiuba-memo2-prueba', "username": 'fiuba_memo2_bot' },
-      "chat": { "id": 141_733_544, "first_name": 'Emilio', "last_name": 'Gutter', "username": 'egutter', "type": 'private' },
+      "chat": { "id": 141_733_544, "first_name": 'Emilio', "lastName": 'Gutter', "username": 'egutter', "type": 'private' },
       "date": 1_557_782_997,
       "text": reply_to_message_text
     }
@@ -47,11 +47,11 @@ def cuando_presiono_el_boton(token, message_text, inline_selection)
       "update_id": 866_033_907,
       "callback_query": {
         "id": '608740940475689651',
-        "from": { "id": 141_733_544, "is_bot": false, "first_name": 'Emilio', "last_name": 'Gutter', "username": 'egutter', "language_code": 'en' },
+        "from": { "id": 141_733_544, "is_bot": false, "first_name": 'Emilio', "lastName": 'Gutter', "username": 'egutter', "language_code": 'en' },
         "message": {
           "message_id": 626,
           "from": { "id": 715_612_264, "is_bot": true, "first_name": 'fiuba-memo2-prueba', "username": 'fiuba_memo2_bot' },
-          "chat": { "id": 141_733_544, "first_name": 'Emilio', "last_name": 'Gutter', "username": 'egutter', "type": 'private' },
+          "chat": { "id": 141_733_544, "first_name": 'Emilio', "lastName": 'Gutter', "username": 'egutter', "type": 'private' },
           "date": 1_595_282_006,
           "text": message_text,
           "reply_markup": {
@@ -78,7 +78,7 @@ def cuando_obtengo_botones(token, message_text)
     "result": {
       "message_id": 12,
       "from": { "id": 715_612_264, "is_bot": true, "first_name": 'fiuba-memo2-prueba', "username": 'fiuba_memo2_bot' },
-      "chat": { "id": 141_733_544, "first_name": 'Emilio', "last_name": 'Gutter', "username": 'egutter', "type": 'private' },
+      "chat": { "id": 141_733_544, "first_name": 'Emilio', "lastName": 'Gutter', "username": 'egutter', "type": 'private' },
       "date": 1_557_782_999,
       "text": message_text
     }
