@@ -1,44 +1,56 @@
-Telegram Bot Example
-====================
+# Agenda Bot - Interfaz de Cliente
 
-1. Registrar un nuevo bot con el BotFather de Telegram
+Bot de Telegram desarrollado en **Ruby** que sirve como interfaz principal para que los usuarios finales interactúen con la **Agenda API**.
 
-* En Telegram https://web.telegram.org/#/im?p=@BotFather (si la url anterior no funciona probar https://web.telegram.org/a/#93372553)
-* Enviarle el comando `/newbot`
-* Seguir los pasos y al final el BotFather responde con un token
+## 🛠️ Stack Técnico
+- **Lenguaje:** Ruby
+- **Comunicación:** REST API (consumiendo Agenda-API)
+- **Testing:** RSpec para pruebas unitarias y de integración.
+- **Contenerización:** Docker & Docker Compose para ambientes locales de desarrollo.
 
-2. Copiar el archivo `.env.example` a `.env` y reemplazar `<YOUR_TELEGRAM_TOKEN>` con el token del paso anterior
+## 🚀 Ejecución de la Aplicación
 
-3. Correr los tests con `bundle exec rake`
+Para iniciar el bot en modo manual o dentro del contenedor
 
-4. Levantar la app localmente con `ruby app.rb`
+```bash
+  ./start_app.sh 
+  ```
+## ⚙️ Desarrollo
 
-# Deploy a Heroku
+Este componente está diseñado para operar en un entorno de desarrollo estandarizado y cuenta con una suite de validación técnica basada en estándares de la comunidad Ruby.
 
-1. Crear la app en heroku
-2. Agregar el remote `heroku git:remote -a <app_name>`
-3. Hacer deploy con `git push heroku master`
-4. Ir a los settings y agregar una nueva variable de entorno `TELEGRAM_TOKEN` con el valor del token
-5. Ir a los Dynos, editar los dynos y confirmar la activación (ver [imagen](https://www.dropbox.com/s/h2hqimu7pbsqrhj/Screenshot%202019-05-15%2021.38.07.png?dl=0))
+🐳 Entorno de Desarrollo (Remote Development)
 
-# Testing
-
-Los tests utilizan WebMock. Para testear el cliente, siempre usar `app.run_once` de lo contrario el bot se queda esperando mensajes y el test no finaliza nunca.
-
-# Llamadas a otras API por HTTP
-
-Se puede utilizar la gema incluida en el repo [Faraday](https://github.com/lostisland/faraday#faraday)
-
-# Correr con docker en modo produccion
-
-docker-compose -f docker-compose.prod.yml --env-file ./.env up --build
+El proyecto utiliza Docker y Dev Containers para garantizar un ambiente consistente.
 
 
-# Logging
+- **Levantar el entorno:** 
+```bash
+  ./start_dev_container.sh 
+  ```
+- **Uso en VS Code**: Al abrir la carpeta, el editor sugerirá automáticamente "Reopen in Container". Esto instalará todas las dependencias y configurará TypeScript y Prisma sin necesidad de instalaciones locales.
 
-La aplicación utiliza la gema SemanticLogger
-El log level se especifica en la configuracion con uno de los siguientes valores: trace|debug|info|warn|error|fatal.
+## 🧪 Ejecución de Tests y Calidad
 
-# Más información
+- **Suite completa:** Ejecuta por defecto las pruebas (spec) y el linter **(rubocop).**
+```bash
+  bundle exec rake
+  ```
 
-Para utilizar otras funcionalidades de Telegram como los Keyboards especiales ver la doc en: https://github.com/atipugin/telegram-bot-ruby
+- **Unitarios:** Ejecuta la suite de pruebas con **RSpec.**
+```bash
+  bundle exec rspec
+  ```
+
+
+- **Aceptacion:** Valida historias de usuario utilizando Cucumber-js (Gherkin).
+```bash
+  bundle exec cucumber
+  ```
+
+
+- **Linter:** Analiza el código buscando infracciones de estilo y mejores prácticas..
+```bash
+  bundle exec rubocop
+  ```
+
